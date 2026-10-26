@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f1ea" />
+    <title>Livraria | Um bom livro muda o dia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f4f1ea;
+        --ink: #20221f;
+        --muted: #70736b;
+        --line: #d9d6cd;
+        --green: #334d3f;
+        --lime: #c9df72;
+        --orange: #d96d45;
+        --white: #fffefa;
+        font-family: "DM Sans", sans-serif;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      .topbar {
+        height: 74px;
+        padding: 0 max(5vw, 24px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        color: var(--ink);
+        text-decoration: none;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--green);
+        color: var(--lime);
+        font-family: "Playfair Display", serif;
+        font-size: 21px;
+      }
+      .nav-note {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      main {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 32px 5vw 76px;
+      }
+      .hero {
+        min-height: 300px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        background: var(--green);
+        color: var(--white);
+      }
+      .hero-copy {
+        position: relative;
+        z-index: 1;
+        width: 60%;
+        padding: 42px 48px;
+      }
+      .eyebrow {
+        margin: 0 0 16px;
+        color: var(--lime);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Playfair Display", Georgia, serif;
+        font-weight: 600;
+      }
+      h1 {
+        max-width: 540px;
+        margin-bottom: 16px;
+        font-size: clamp(36px, 5vw, 62px);
+        line-height: 1.02;
+      }
+      .hero-copy > p:last-child {
+        max-width: 370px;
+        margin-bottom: 0;
+        color: #e2e8db;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      .hero-image {
+        position: absolute;
+        inset: 0 0 0 53%;
+        background:
+          linear-gradient(
+            90deg,
+            var(--green) 0%,
+            rgba(51, 77, 63, 0.18) 28%,
+            rgba(32, 34, 31, 0.04) 100%
+          ),
+          url("https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1100&q=85")
+            center 48% / cover;
+      }
+      .search-section {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        gap: 22px;
+        margin: 48px 0 24px;
+      }
+      .section-label {
+        margin-bottom: 10px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .search-form {
+        display: flex;
+        max-width: 660px;
+        border-bottom: 1px solid var(--ink);
+      }
+      .search-form input {
+        width: 100%;
+        border: 0;
+        outline: 0;
+        padding: 13px 4px;
+        color: var(--ink);
+        background: transparent;
+        font-size: 17px;
+      }
+      .search-form input::placeholder {
+        color: #8a8c84;
+      }
+      .search-form button {
+        width: 46px;
+        flex: 0 0 46px;
+        border: 0;
+        background: transparent;
+        color: var(--green);
+        font-size: 22px;
+      }
+      .result-count {
+        margin-bottom: 12px;
+        color: var(--muted);
+        font-size: 13px;
+        white-space: nowrap;
+      }
+      .content-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 300px;
+        align-items: start;
+        gap: 42px;
+      }
+      .section-heading {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .section-heading h2 {
+        margin-bottom: 12px;
+        font-size: 24px;
+      }
+      .book-list {
+        display: grid;
+        gap: 10px;
+      }
+      .book-row {
+        width: 100%;
+        min-height: 124px;
+        display: grid;
+        grid-template-columns: 82px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 20px;
+        padding: 14px 18px 14px 14px;
+        border: 1px solid var(--line);
+        background: rgba(255, 254, 250, 0.55);
+        text-align: left;
+        transition:
+          border-color 0.18s ease,
+          transform 0.18s ease,
+          background 0.18s ease;
+        animation: appear 0.35s both;
+      }
+      .book-row:hover,
+      .book-row[aria-pressed="true"] {
+        border-color: var(--green);
+        background: var(--white);
+        transform: translateY(-2px);
+      }
+      .book-cover {
+        width: 82px;
+        height: 96px;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: #e5d5b7;
+        color: var(--green);
+      }
+      .book-cover img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .book-cover .cover-letter {
+        font:
+          600 48px/1 "Playfair Display",
+          serif;
+      }
+      .book-info h3 {
+        margin-bottom: 5px;
+        font-size: 20px;
+      }
+      .book-info p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .book-price {
+        color: var(--green);
+        font-size: 15px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .book-price small {
+        display: block;
+        margin-top: 7px;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 500;
+        text-align: right;
+      }
+      .aside-panel {
+        padding: 21px 0;
+        border-top: 3px solid var(--orange);
+      }
+      .aside-panel + .aside-panel {
+        border-top: 1px solid var(--line);
+      }
+      .aside-panel h2 {
+        margin-bottom: 15px;
+        font-size: 21px;
+      }
+      .store-finder {
+        display: flex;
+        border-bottom: 1px solid var(--ink);
+      }
+      .store-finder input {
+        width: 100%;
+        min-width: 0;
+        padding: 10px 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+      }
+      .store-finder button {
+        border: 0;
+        background: transparent;
+        color: var(--green);
+        font-weight: 700;
+      }
+      .availability {
+        min-height: 38px;
+        margin: 12px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .store-meta {
+        display: grid;
+        gap: 13px;
+      }
+      .meta-label {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--muted);
+        font-size: 11px;
+        text-transform: uppercase;
+      }
+      .meta-value {
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .recommendations {
+        display: grid;
+        gap: 11px;
+      }
+      .recommendation {
+        padding: 11px 12px;
+        border-left: 2px solid var(--lime);
+        background: rgba(255, 254, 250, 0.65);
+      }
+      .recommendation strong {
+        display: block;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .recommendation span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .empty-state {
+        padding: 30px 18px;
+        border: 1px dashed var(--line);
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .toast {
+        min-height: 20px;
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      footer {
+        margin-top: 54px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 12px;
+      }
+      @keyframes appear {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @media (max-width: 760px) {
+        .topbar {
+          height: 62px;
+        }
+        .nav-note {
+          font-size: 11px;
+        }
+        main {
+          padding-top: 18px;
+        }
+        .hero {
+          min-height: 360px;
+          align-items: end;
+        }
+        .hero-image {
+          inset: 0;
+          background-image:
+            linear-gradient(
+              0deg,
+              var(--green) 0%,
+              rgba(51, 77, 63, 0.8) 38%,
+              rgba(32, 34, 31, 0.04) 100%
+            ),
+            url("https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=900&q=85");
+        }
+        .hero-copy {
+          width: 100%;
+          padding: 28px 24px;
+        }
+        h1 {
+          font-size: 42px;
+        }
+        .search-section {
+          grid-template-columns: 1fr;
+          gap: 8px;
+          margin-top: 34px;
+        }
+        .result-count {
+          margin: 0;
+        }
+        .content-grid {
+          grid-template-columns: 1fr;
+          gap: 28px;
+        }
+        .book-row {
+          grid-template-columns: 66px minmax(0, 1fr) auto;
+          gap: 12px;
+          padding: 11px;
+        }
+        .book-cover {
+          width: 66px;
+          height: 84px;
+        }
+        .book-info h3 {
+          font-size: 17px;
+        }
+        .book-price {
+          font-size: 13px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Livraria, início"
+        ><span class="brand-mark">L</span><span>livraria</span></a
+      >
+      <span class="nav-note">Um lugar para encontrar sua próxima leitura</span>
+    </header>
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Entre páginas, novas ideias</p>
+          <h1 id="hero-title">Um bom livro muda o dia.</h1>
+          <p>Encontre uma história para levar com você.</p>
+        </div>
+        <div
+          class="hero-image"
+          role="img"
+          aria-label="Estantes de livros em uma livraria"
+        ></div>
+      </section>
+
+      <section class="search-section" aria-label="Pesquisa de livros">
+        <div>
+          <p class="section-label">Catálogo</p>
+          <form class="search-form" id="search-form">
+            <input
+              id="search-input"
+              type="search"
+              placeholder="Busque por título ou autor"
+              autocomplete="off"
+              aria-label="Buscar livros por título ou autor"
+            />
+            <button type="submit" aria-label="Pesquisar">⌕</button>
+          </form>
+        </div>
+        <p class="result-count" id="result-count" aria-live="polite"></p>
+      </section>
+
+      <div class="content-grid">
+        <section aria-labelledby="catalog-title">
+          <div class="section-heading">
+            <h2 id="catalog-title">Livros para descobrir</h2>
+          </div>
+          <div class="book-list" id="book-list" aria-live="polite"></div>
+        </section>
+
+        <aside>
+          <section class="aside-panel" aria-labelledby="availability-title">
+            <h2 id="availability-title">Disponibilidade na loja</h2>
+            <form class="store-finder" id="store-form">
+              <input
+                id="store-input"
+                type="text"
+                placeholder="Nome da loja"
+                aria-label="Nome da loja"
+                value="Loja Centro"
+              />
+              <button type="submit" aria-label="Consultar disponibilidade">
+                Verificar
+              </button>
+            </form>
+            <p
+              class="availability"
+              id="availability-message"
+              aria-live="polite"
+            >
+              Selecione um livro para consultar.
+            </p>
+          </section>
+
+          <section class="aside-panel" aria-labelledby="store-title">
+            <h2 id="store-title">A livraria</h2>
+            <div class="store-meta">
+              <div>
+                <span class="meta-label">Horário</span
+                ><span class="meta-value" id="store-hours">Carregando...</span>
+              </div>
+              <div>
+                <span class="meta-label">Localização</span
+                ><span class="meta-value" id="store-location"
+                  >Carregando...</span
+                >
+              </div>
+            </div>
+          </section>
+
+          <section class="aside-panel" aria-labelledby="recommendations-title">
+            <h2 id="recommendations-title">Recomendações</h2>
+            <div class="recommendations" id="recommendations"></div>
+          </section>
+        </aside>
+      </div>
+      <footer>Catálogo e informações da livraria</footer>
+    </main>
+
+    <script>
+      const bookList = document.querySelector("#book-list");
+      const resultCount = document.querySelector("#result-count");
+      const availabilityMessage = document.querySelector(
+        "#availability-message",
+      );
+      let selectedTitle = null;
+
+      async function getJson(url) {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (!response.ok)
+          throw new Error(data.erro || "Não foi possível carregar os dados.");
+        return data;
+      }
+
+      function renderBooks(books) {
+        bookList.replaceChildren();
+        resultCount.textContent = `${books.length} ${books.length === 1 ? "livro encontrado" : "livros encontrados"}`;
+        if (!books.length) {
+          const empty = document.createElement("p");
+          empty.className = "empty-state";
+          empty.textContent = "Nenhum livro encontrado para essa busca.";
+          bookList.append(empty);
+          return;
+        }
+
+        books.forEach((book, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "book-row";
+          button.style.animationDelay = `${index * 45}ms`;
+          button.setAttribute(
+            "aria-pressed",
+            String(book.titulo === selectedTitle),
+          );
+          const cover = document.createElement("span");
+          cover.className = "book-cover";
+          const letter = document.createElement("span");
+          letter.className = "cover-letter";
+          letter.textContent = book.titulo.charAt(0);
+          cover.append(letter);
+          const info = document.createElement("span");
+          info.className = "book-info";
+          const title = document.createElement("h3");
+          title.textContent = book.titulo;
+          const author = document.createElement("p");
+          author.textContent = book.autor;
+          info.append(title, author);
+          const price = document.createElement("span");
+          price.className = "book-price";
+          price.textContent = Number(book.preco).toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+          });
+          const stock = document.createElement("small");
+          stock.textContent = book.disponivel ? "Disponível" : "Indisponível";
+          price.append(stock);
+          button.append(cover, info, price);
+          button.addEventListener("click", () => selectBook(book.titulo));
+          bookList.append(button);
+        });
+      }
+
+      async function loadBooks(query = "") {
+        const params = new URLSearchParams();
+        if (query.trim()) params.set("q", query.trim());
+        try {
+          const data = await getJson(`/api/livros?${params}`);
+          renderBooks(data.livros);
+          if (
+            selectedTitle &&
+            !data.livros.some((book) => book.titulo === selectedTitle)
+          ) {
+            selectedTitle = null;
+            availabilityMessage.textContent =
+              "Selecione um livro para consultar.";
+          }
+        } catch (error) {
+          bookList.innerHTML = "";
+          resultCount.textContent = error.message;
+        }
+      }
+
+      async function selectBook(title) {
+        selectedTitle = title;
+        const { livros } = await getJson("/api/livros");
+        renderBooks(livros);
+        const store = document.querySelector("#store-input").value.trim();
+        await checkAvailability(store);
+      }
+
+      async function checkAvailability(store) {
+        if (!selectedTitle) {
+          availabilityMessage.textContent =
+            "Selecione um livro para consultar.";
+          return;
+        }
+        if (!store) {
+          availabilityMessage.textContent = "Informe uma loja para consultar.";
+          return;
+        }
+        try {
+          const params = new URLSearchParams({ loja: store });
+          const data = await getJson(
+            `/api/livros/${encodeURIComponent(selectedTitle)}/disponibilidade?${params}`,
+          );
+          availabilityMessage.textContent = data.disponivel
+            ? `${selectedTitle} está disponível em ${store}.`
+            : `${selectedTitle} não está disponível em ${store}.`;
+        } catch (error) {
+          availabilityMessage.textContent = error.message;
+        }
+      }
+
+      document
+        .querySelector("#search-form")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
+          loadBooks(document.querySelector("#search-input").value);
+        });
+      document
+        .querySelector("#store-form")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
+          checkAvailability(
+            document.querySelector("#store-input").value.trim(),
+          );
+        });
+
+      Promise.all([
+        loadBooks(),
+        getJson("/api/horario").then((data) => {
+          document.querySelector("#store-hours").textContent = data.horario;
+        }),
+        getJson("/api/localizacao").then((data) => {
+          document.querySelector("#store-location").textContent =
+            data.localizacao;
+        }),
+        getJson("/api/recomendacoes").then(({ livros }) => {
+          const container = document.querySelector("#recommendations");
+          if (!livros.length) {
+            container.textContent = "Nenhuma recomendação disponível.";
+            return;
+          }
+          livros.forEach((book) => {
+            const item = document.createElement("div");
+            item.className = "recommendation";
+            const title = document.createElement("strong");
+            title.textContent = book.titulo;
+            const author = document.createElement("span");
+            author.textContent = book.autor;
+            item.append(title, author);
+            container.append(item);
+          });
+        }),
+      ]).catch((error) => {
+        document.querySelector("#recommendations").textContent = error.message;
+      });
+    </script>
+  </body>
+</html>
