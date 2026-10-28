@@ -1,81 +1,77 @@
-"""Controladores e rotas da aplicação da livraria."""
+"""Camada de aplicação responsável pelas rotas da livraria."""
 
 from flask import Blueprint, jsonify, request
-
-from models.livraria import (
-    consultar_horario,
-    consultar_livro,
-    consultar_localizacao,
-    consultar_disponibilidade_loja,
-    listar_livros,
-    pesquisar_livros,
-    recomendar_livros,
-)
+from services import livraria_service as service
 
 livraria_bp = Blueprint("livraria", __name__)
 
+@livraria_bp.route("/api/livros", methods=["GET"])
+def listar_livros():
+    """Lista todos os livros ou pesquisa por título e autor."""
+    termo = request.args.get("q", "")
+    livros = service.pesquisar_livros(termo)
+    return jsonify(livros)
 
-@livraria_bp.get("/api/livros")
-def api_livros():
-    """Lista ou pesquisa livros."""
-    busca = request.args.get("q", "")
-
-    livros = (
-        pesquisar_livros(busca)
-        if busca.strip()
-        else listar_livros()
-    )
-
-    return jsonify({"livros": livros})
-
-
-@livraria_bp.get("/api/livros/<path:titulo>")
-def api_livro(titulo):
+@livraria_bp.route("/api/livros/<path:titulo>", methods=["GET"])
+def consultar_livro(titulo):
     """Consulta os dados de um livro."""
-    livro = consultar_livro(titulo)
+    livro = service.consultar_livro(titulo)
 
     if livro is None:
-        return jsonify({"erro": "Livro não encontrado."}), 404
-
+        return jsonify({"erro": "Livro não encontrado"}), 404
     return jsonify(livro)
 
-
-@livraria_bp.get("/api/livros/<path:titulo>/disponibilidade")
-def api_disponibilidade(titulo):
+@livraria_bp.route(
+    "/api/livros/<path:titulo>/disponibilidade",
+    methods=["GET"]
+)
+def consultar_disponibilidade(titulo):
     """Consulta a disponibilidade de um livro."""
-    livro = consultar_livro(titulo)
+    disponibilidade = service.consultar_disponibilidade(titulo)
 
-    if livro is None:
-        return jsonify({"erro": "Livro não encontrado."}), 404
+    if disponibilidade is None:
+        return jsonify({"erro": "Livro não encontrado"}), 404
+    return jsonify({"disponivel": disponibilidade})
 
-    loja = request.args.get("loja")
+@livraria_bp.route("/api/horario", methods=["GET"])
+def consultar_horario():
+    """Retorna o horário da livraria."""
+    return jsonify({"horario": service.consultar_horario()})
 
-    if loja:
-        disponivel = consultar_disponibilidade_loja(
-            titulo, loja
-        )
-    else:
-        disponivel = livro["disponivel"]
+@livraria_bp.route("/api/localizacao", methods=["GET"])
+def consultar_localizacao():
+    """Retorna a localização da livraria."""
+    return jsonify({"localizacao": service.consultar_localizacao()})
 
-    return jsonify({
-        "disponivel": disponivel,
-        "loja": loja,
-    })
+@livraria_bp.route("/api/recomendacoes", methods=["GET"])
+def recomendar_livros():
+    """Retorna recomendações de livros."""
+    termo = request.args.get("q", "")
+    return jsonify(service.recomendar_livros(termo))
 
+@livraria_bp.route("/api/favoritos", methods=["GET"])
+def listar_favoritos():
+    """Lista os livros favoritos."""
+    return jsonify(service.listar_favoritos())
 
-@livraria_bp.get("/api/horario")
-def api_horario():
-    """Consulta o horário de funcionamento."""
-    return jsonify({"horario": consultar_horario()})
+@livraria_bp.route("/api/favoritos", methods=["POST"])
+def adicionar_favorito():
+    """Adiciona um livro aos favoritos."""
+    dados = request.get_json(silent=True) or {}
+    titulo = dados.get("titulo", "")
 
+    if not service.adicionar_favorito(titulo):
+        return jsonify({"erro": "Livro não encontrado"}), 404
+    return jsonify({"mensagem": "Livro adicionado aos favoritos"}), 201
 
-@livraria_bp.get("/api/localizacao")
-def api_localizacao():
-    """Consulta a localização da livraria."""
-    return jsonify({"localizacao": consultar_localizacao()})
-
-
-@livraria_bp.get("/api/recomendacoes")
-def api_recomendacoes():
-    """Retorna os livros recomendados."""
-    return jsonify({"livros": recomendar_livros()})
+@livraria_bp.route(
+    "/api/favoritos/<path:titulo>",
+    methods=["DELETE"]
+)
+def remover_favorito(titulo):
+    """Remove um livro dos favoritos."""
+    if not service.remover_favorito(titulo):
+        return jsonify({
+            "erro": "Livro não encontrado nos favoritos"
+        }), 404
+    return jsonify({"mensagem": "Livro removido dos favoritos"})
